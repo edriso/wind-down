@@ -1,0 +1,229 @@
+/* Wind Down — night indigo, a breathing orb, a screen that dims as the ritual
+   proceeds. Ported from the prototype. Entrances animate transform only
+   (opacity stays 1) to avoid the freeze regression. */
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #13141f;
+  --color-accent: #8a8fc4;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-ui: 'Hanken Grotesk', system-ui, sans-serif;
+}
+
+:root {
+  --accent: #8a8fc4;
+  --serif: 'Newsreader', Georgia, serif;
+  --ui: 'Hanken Grotesk', system-ui, sans-serif;
+}
+[data-theme='night'] {
+  --bg: #13141f;
+  --bg2: #0d0e16;
+  --surface: #1c1d2b;
+  --surface2: #262738;
+  --line: rgba(210, 215, 255, 0.1);
+  --ink: #e8e9f3;
+  --dim: #a0a3bd;
+  --faint: #646785;
+  --on: #0e0f16;
+  --soft: color-mix(in oklab, var(--accent) 20%, transparent);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: radial-gradient(130% 90% at 50% 15%, var(--bg), var(--bg2));
+  color: var(--ink);
+  font-family: var(--ui);
+  min-height: 100vh;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    filter 1.2s ease,
+    background 0.8s ease;
+}
+body.dim {
+  filter: brightness(0.62) saturate(0.85);
+}
+button {
+  font-family: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+.stage {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 19px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  margin-bottom: clamp(26px, 7vh, 56px);
+}
+.h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(30px, 8vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.sub {
+  color: var(--dim);
+  font-size: 16px;
+  line-height: 1.55;
+  margin: 0 0 30px;
+  max-width: 330px;
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 30px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--on);
+  font-family: var(--ui);
+  font-weight: 600;
+  font-size: 16.5px;
+  box-shadow: 0 12px 30px color-mix(in oklab, var(--accent) 30%, transparent);
+  transition:
+    filter 0.15s,
+    transform 0.1s;
+}
+.cta:hover {
+  filter: brightness(1.07);
+}
+.cta:active {
+  transform: scale(0.97);
+}
+.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  box-shadow: none;
+}
+.orb {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 42% 38%,
+    color-mix(in oklab, var(--accent) 70%, white),
+    var(--accent) 55%,
+    color-mix(in oklab, var(--accent) 35%, transparent)
+  );
+  box-shadow: 0 0 70px color-mix(in oklab, var(--accent) 38%, transparent);
+  animation: breathe 9s ease-in-out infinite;
+  margin-bottom: 30px;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+.stepcount {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 18px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.timeset {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.chip {
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--dim);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.chip.on {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--soft);
+}
+.corner {
+  position: fixed;
+  top: 18px;
+  inset-inline-end: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--faint);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.corner:hover {
+  color: var(--dim);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .orb {
+    transform: scale(1);
+  }
+}
